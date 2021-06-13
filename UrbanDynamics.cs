@@ -461,6 +461,7 @@ namespace UrbanDynamics
             State S_K = new State();
 
             #region Level Equations
+
             // (2) Attractiveness for migration multiplier perceived
             S_K.AMMP = S_J.AMMP + (DT / AMMPT) * (S_J.AMM - S_J.AMMP);
 
@@ -516,7 +517,7 @@ namespace UrbanDynamics
 
             // (123) Tax ratio needed perceived
             S_K.TRNP = S_J.TRNP + (DT / TRNPT) * (S_J.TRN - S_J.TRNP);
-            
+         
             #endregion
 
             #region Auxiliary Equations
@@ -532,7 +533,7 @@ namespace UrbanDynamics
             S_K.LFO = (S_K.HUT * LPH + S_K.PUT * LPP) / AREA;
 
             // (122) Tax ratio
-            S_K.TR = Table.LookupClamp(TRT_X, TRT_Y, Math.Log(S_K.TRNP, 2.0));
+            S_K.TR = TABHL(TRT_X, TRT_Y, 1.44*Math.Log(S_K.TRNP));
 
             // (58) Manager population ratio
             S_K.MPR = S_K.MP / (S_K.L + S_K.U);
@@ -544,17 +545,17 @@ namespace UrbanDynamics
             S_K.MR = S_K.MP / S_K.MJ;
 
             // (67) Premium housing adequacy multiplier
-            S_K.PHAM = Table.Lookup(PHAMT_X, PHAMT_Y, S_K.MHR);
+            S_K.PHAM = TABLE(PHAMT_X, PHAMT_Y, S_K.MHR);
             // (68) Premium housing land multiplier
-            S_K.PHLM = Table.LookupClamp(PHLMT_X, PHLMT_Y, S_K.LFO);
+            S_K.PHLM = TABHL(PHLMT_X, PHLMT_Y, S_K.LFO);
             // (72) Premium housing population multiplier
-            S_K.PHPM = Table.LookupClamp(PHPMT_X, PHPMT_Y, S_K.MPR);
+            S_K.PHPM = TABHL(PHPMT_X, PHPMT_Y, S_K.MPR);
             // (73) Premium housing tax multiplier
-            S_K.PHTM = Table.LookupClamp(PHTMT_X, PHTMT_Y, Math.Log(S_K.TR, 2.0));
+            S_K.PHTM = TABHL(PHTMT_X, PHTMT_Y, 1.44*Math.Log(S_K.TR));
             // (74) Premium housing enterprise multiplier
-            S_K.PHEM = Table.LookupClamp(PHEMT_X, PHEMT_Y, S_K.NEGR);
+            S_K.PHEM = TABHL(PHEMT_X, PHEMT_Y, S_K.NEGR);
             // (75) Premium housing growth multiplier
-            S_K.PHGM = Table.LookupClamp(PHGMT_X, PHGMT_Y, S_K.PHGR);
+            S_K.PHGM = TABHL(PHGMT_X, PHGMT_Y, S_K.PHGR);
             // (66) Premium housing multiplier
             S_K.PHM = S_K.PHAM * S_K.PHLM * S_K.PHPM * S_K.PHTM * S_K.PHEM * S_K.PHGM * PHF;
             // (142) Premium housing construction program
@@ -570,17 +571,17 @@ namespace UrbanDynamics
             // (91) Worker housing growth rate
             S_K.WHGR = (S_K.WH - S_K.WHA) / (S_K.WH * WHAT);
             // (85) Worker housing adequacy multiplier
-            S_K.WHAM = Table.LookupClamp(WHAMT_X, WHAMT_Y, S_K.LHR);
+            S_K.WHAM = TABHL(WHAMT_X, WHAMT_Y, S_K.LHR);
             // (86) Worker housing land multiplier
-            S_K.WHLM = Table.LookupClamp(WHLMT_X, WHLMT_Y, S_K.LFO);
+            S_K.WHLM = TABHL(WHLMT_X, WHLMT_Y, S_K.LFO);
             // (87) Worker housing underemployed multiplier
-            S_K.WHUM = Table.LookupClamp(WHUMT_X, WHUMT_Y, S_K.LUR);
+            S_K.WHUM = TABHL(WHUMT_X, WHUMT_Y, S_K.LUR);
             // (88) Worker housing tax multiplier
-            S_K.WHTM = Table.LookupClamp(WHTMT_X, WHTMT_Y, Math.Log(S_K.TR, 2.0));
+            S_K.WHTM = TABHL(WHTMT_X, WHTMT_Y, 1.44*Math.Log(S_K.TR));
             // (89) Worker housing enterprise multiplier
-            S_K.WHEM = Table.LookupClamp(WHEMT_X, WHEMT_Y, S_K.NEGR);
+            S_K.WHEM = TABHL(WHEMT_X, WHEMT_Y, S_K.NEGR);
             // (90) Worker housing growth multiplier
-            S_K.WHGM = Table.LookupClamp(WHGMT_X, WHGMT_Y, S_K.WHGR);
+            S_K.WHGM = TABHL(WHGMT_X, WHGMT_Y, S_K.WHGR);
             // (84) Worker housing multiplier
             S_K.WHM = S_K.WHAM * S_K.WHLM * S_K.WHUM * S_K.WHTM * S_K.WHEM * S_K.WHGM * WHF;
             // (143) Worker housing construction program
@@ -589,15 +590,15 @@ namespace UrbanDynamics
             S_K.WHCD = (WHCN * S_K.WH * S_K.WHM) + S_K.WHCP;
             
             // (104) Enterprise manager / job multiplier
-            S_K.EMM = Table.LookupClamp(EMMT_X, EMMT_Y, S_K.MR);
+            S_K.EMM = TABHL(EMMT_X, EMMT_Y, S_K.MR);
             // (105) Enterprise land multiplier
-            S_K.ELM = Table.LookupClamp(ELMT_X, ELMT_Y, S_K.LFO);
+            S_K.ELM = TABHL(ELMT_X, ELMT_Y, S_K.LFO);
             // (106) Enterprise labor / job multiplier
-            S_K.ELJM = Table.LookupClamp(ELJMT_X, ELJMT_Y, S_K.LRP);
+            S_K.ELJM = TABHL(ELJMT_X, ELJMT_Y, S_K.LRP);
             // (107) Enterprise tax multiplier
-            S_K.ETM = Table.LookupClamp(ETMT_X, ETMT_Y, Math.Log(S_K.TR, 2.0));
+            S_K.ETM = TABHL(ETMT_X, ETMT_Y, 1.44*Math.Log(S_K.TR));
             // (108) Enterprise growth multiplier
-            S_K.EGM = Table.LookupClamp(EGMT_X, EGMT_Y, S_K.NEGR);
+            S_K.EGM = TABHL(EGMT_X, EGMT_Y, S_K.NEGR);
             // (103) Enterprise multiplier
             S_K.EM = S_K.EMM * S_K.ELM * S_K.ELJM * S_K.ETM * S_K.EGM * EF;
 
@@ -624,17 +625,17 @@ namespace UrbanDynamics
             S_K.LR = S_K.L / S_K.LJ;
 
             // (44) Labor arrival job multiplier
-            S_K.LAJM = Table.Lookup(LAJMT_X, LAJMT_Y, S_K.LR);
+            S_K.LAJM = TABLE(LAJMT_X, LAJMT_Y, S_K.LR);
             // (45) Labor arrival underemployed multiplier
-            S_K.LAUM = Table.LookupClamp(LAUMT_X, LAUMT_Y, S_K.LUR);
+            S_K.LAUM = TABHL(LAUMT_X, LAUMT_Y, S_K.LUR);
             // (46) Labor arrival tax multiplier
-            S_K.LATM = Table.Lookup(LATMT_X, LATMT_Y, Math.Log(S_K.TR, 2));
+            S_K.LATM = TABLE(LATMT_X, LATMT_Y, 1.44*Math.Log(S_K.TR));
             // (47) Labor arrival housing multiplier
-            S_K.LAHM = Table.Lookup(LAHMT_X, LAHMT_Y, S_K.LHR);
+            S_K.LAHM = TABLE(LAHMT_X, LAHMT_Y, S_K.LHR);
             // (43) Labor arrival multiplier
             S_K.LAM = S_K.LAJM * S_K.LAUM * S_K.LATM * S_K.LAHM * LAF;
             // (138) Labor construction ratio
-            S_K.LCR = Table.LookupClamp(LCRT_X, LCRT_Y, S_K.LR);
+            S_K.LCR = TABHL(LCRT_X, LCRT_Y, S_K.LR);
             #endregion
 
             // --- TAX SECTOR ---
@@ -651,12 +652,12 @@ namespace UrbanDynamics
             // --- WORKER HOUSING SECTOR ---
 
             // (94) Worker housing obsolescence multiplier
-            S_K.WHOM = Table.LookupClamp(WHOMT_X, WHOMT_Y, Math.Log(S_K.WHM, 2.0));
+            S_K.WHOM = TABHL(WHOMT_X, WHOMT_Y, 1.44*Math.Log(S_K.WHM));
 
             // --- JOB SECTOR ---
 
             // (135) Underemployed labor / job ratio
-            S_K.ULJR = Table.LookupClamp(ULJRT_X, ULJRT_Y, S_K.LR);
+            S_K.ULJR = TABHL(ULJRT_X, ULJRT_Y, S_K.LR);
             // (148) Underemployed job program
             S_K.UJP = UJPC * S_K.U * CLIP(0, 1, SWT9, TIME);
             // (136) Underemployed jobs
@@ -671,19 +672,19 @@ namespace UrbanDynamics
             // (8) Tax per capita ratio
             S_K.TPCR = ((S_K.TC / S_K.P) + S_K.TPCSP) / TPCN;
             // (7) Public expenditure multiplier
-            S_K.PEM = Table.LookupClamp(PEMT_X, PEMT_Y, S_K.TPCR);
+            S_K.PEM = TABHL(PEMT_X, PEMT_Y, S_K.TPCR);
 
             // (12) Underemployed housing program rate
             S_K.UHPR = S_J.LCHP / S_K.U;
             // (11) Underemployed housing program multiplier
-            S_K.UHPM = Table.LookupClamp(UHPMT_X, UHPMT_Y, S_K.UHPR);
+            S_K.UHPM = TABHL(UHPMT_X, UHPMT_Y, S_K.UHPR);
             // (10) Underemployed / job multiplier
-            S_K.UJM = Table.LookupClamp(UJMT_X, UJMT_Y, S_K.UR);
+            S_K.UJM = TABHL(UJMT_X, UJMT_Y, S_K.UR);
             // (140) Underemployment training program
             S_K.UTP = UTR * S_K.U * CLIP(0, 1, SWT1, TIME);
 
             // (19) Underemployed fraction working
-            S_K.UFW = Table.LookupClamp(UFWT_X, UFWT_Y, S_K.UR);
+            S_K.UFW = TABHL(UFWT_X, UFWT_Y, S_K.UR);
             // (18) Underemployed working
             S_K.UW = S_K.U * S_K.UFW;
             // (20) Underemployed to labor perceived
@@ -694,70 +695,70 @@ namespace UrbanDynamics
             // (6) Underemployed / housing ratio
             S_K.UHR = (S_K.U * UFS) / (S_K.UH * UHPD);
             // (4) Underemployed arrivals mobility multiplier
-            S_K.UAMM = Table.Lookup(UAMMT_X, UAMMT_Y, S_K.UM);
+            S_K.UAMM = TABLE(UAMMT_X, UAMMT_Y, S_K.UM);
             // (5) Underemployed / housing multiplier
-            S_K.UHM = Table.LookupClamp(UHMT_X, UHMT_Y, S_K.UHR);
+            S_K.UHM = TABHL(UHMT_X, UHMT_Y, S_K.UHR);
             // (3) Attractiveness for migration multiplier
             S_K.AMM = S_K.UAMM * S_K.UHM * S_K.PEM * S_K.UJM * S_K.UHPM * AMF;
             // (14) Underemployed departure multiplier
-            S_K.UDM = Table.LookupClamp(UDMT_X, UDMT_Y, Math.Log(S_K.AMM, 2.0));
+            S_K.UDM = TABHL(UDMT_X, UDMT_Y, 1.44*Math.Log(S_K.AMM));
 
             // --- LABOR SECTOR ---
 
             // (24) Labor supply multiplier
-            S_K.LSM = Table.LookupClamp(LSMT_X, LSMT_Y, S_K.LR);
+            S_K.LSM = TABHL(LSMT_X, LSMT_Y, S_K.LR);
             // (25) Labor / underemployed multiplier
-            S_K.LUM = Table.LookupClamp(LUMT_X, LUMT_Y, S_K.LUR);
+            S_K.LUM = TABHL(LUMT_X, LUMT_Y, S_K.LUR);
             // (27) Underemployed educational multiplier
-            S_K.UEM = Table.LookupClamp(UEMT_X, UEMT_Y, S_K.TPCR);
+            S_K.UEM = TABHL(UEMT_X, UEMT_Y, S_K.TPCR);
             // (23) Underemployed mobility multiplier
             S_K.UMM = S_K.LSM * S_K.LUM * S_K.UEM * UMF;
 
             // (31) Labor layoff fractions
-            S_K.LLF = Table.Lookup(LLFT_X, LLFT_Y, S_K.LR);
+            S_K.LLF = TABLE(LLFT_X, LLFT_Y, S_K.LR);
             // (141) Labor training program
             S_K.LTPG = LTR * S_K.L * CLIP(0, 1, SWT2, TIME);
 
             // (35) Manager supply multiplier
-            S_K.MSM = Table.LookupClamp(MSMT_X, MSMT_Y, S_K.MR);
+            S_K.MSM = TABHL(MSMT_X, MSMT_Y, S_K.MR);
             
             // (39) Manager / labor ratio
             S_K.MLR = S_K.MP / S_K.L;
             // (38) Manager / labor multiplier
-            S_K.MLM = Table.LookupClamp(MLMT_X, MLMT_Y, S_K.MLR);
+            S_K.MLM = TABHL(MLMT_X, MLMT_Y, S_K.MLR);
             // (40) Labor educational multiplier
-            S_K.LEM = Table.LookupClamp(LEMT_X, LEMT_Y, S_K.TPCR);
+            S_K.LEM = TABHL(LEMT_X, LEMT_Y, S_K.TPCR);
             // (34) Labor mobility multiplier
             S_K.LMM = S_K.MSM * S_K.MLM * S_K.LEM * LMF;
             // (50) Labor departure multiplier
-            S_K.LDM = Table.LookupClamp(LDMT_X, LDMT_Y, Math.Log(S_K.LAM, 2));
+            S_K.LDM = TABHL(LDMT_X, LDMT_Y, 1.44*Math.Log(S_K.LAM));
 
             // --- MANAGERIAL-PROFESSIONAL SECTOR
 
             // (56) Manager arrival job multiplier
-            S_K.MAJM = Table.Lookup(MAJMT_X, MAJMT_Y, S_K.MR);
+            S_K.MAJM = TABLE(MAJMT_X, MAJMT_Y, S_K.MR);
             // (57) Manager arrival population multiplier
-            S_K.MAPM = Table.LookupClamp(MAPMT_X, MAPMT_Y, S_K.MPR);
+            S_K.MAPM = TABHL(MAPMT_X, MAPMT_Y, S_K.MPR);
             // (59) Manager arrival tax multiplier
-            S_K.MATM = Table.Lookup(MATMT_X, MATMT_Y, Math.Log(S_K.TR, 2));
+            S_K.MATM = TABLE(MATMT_X, MATMT_Y, 1.44*Math.Log(S_K.TR));
             // (60) Manager arrival housing multiplier
-            S_K.MAHM = Table.Lookup(MAHMT_X, MAHMT_Y, S_K.MHR);
+            S_K.MAHM = TABLE(MAHMT_X, MAHMT_Y, S_K.MHR);
             // (55) Manager arrival multiplier
             S_K.MAM = S_K.MAJM * S_K.MAPM * S_K.MATM * S_K.MAHM * MAF;
             // (63) Manager departure multiplier
-            S_K.MDM = Table.LookupClamp(MDMT_X, MDMT_Y, Math.Log(S_K.MAM, 2));
+            S_K.MDM = TABHL(MDMT_X, MDMT_Y, 1.44*Math.Log(S_K.MAM));
 
             // --- PREMIUM HOUSING SECTOR ---
 
             // (80) Premium housing obsolescence multiplier
-            S_K.PHOM = Table.LookupClamp(PHOMT_X, PHOMT_Y, Math.Log(S_K.PHM, 2.0));
+            S_K.PHOM = TABHL(PHOMT_X, PHOMT_Y, 1.44*Math.Log(S_K.PHM));
 
             // --- UNDEREMPLOYED HOUSING SECTOR ---
 
             // (98) Slum housing abandoned multiplier
-            S_K.SHAM = Table.Lookup(SHAMT_X, SHAMT_Y, S_K.UHR);
+            S_K.SHAM = TABLE(SHAMT_X, SHAMT_Y, S_K.UHR);
             // (99) Slum housing land multiplier
-            S_K.SHLM = Table.LookupClamp(SHLMT_X, SHLMT_Y, S_K.LFO);
+            S_K.SHLM = TABHL(SHLMT_X, SHLMT_Y, S_K.LFO);
             // (97) Slum housing demolition multiplier
             S_K.SHDM = S_K.SHAM * S_K.SHLM * SHDF;
             // (144) Slum housing demolition program
@@ -766,16 +767,16 @@ namespace UrbanDynamics
             // --- MATURE BUSINESS SECTOR ---
 
             // (112) Enterprise decline multiplier
-            S_K.EDM = Table.LookupClamp(EDMT_X, EDMT_Y, Math.Log(S_K.EM, 2.0));
+            S_K.EDM = TABHL(EDMT_X, EDMT_Y, 1.44*Math.Log(S_K.EM));
             // (115) Business decline multiplier
-            S_K.BDM = Table.LookupClamp(BDMT_X, BDMT_Y, Math.Log(S_K.EM, 2.0));
+            S_K.BDM = TABHL(BDMT_X, BDMT_Y, 1.44*Math.Log(S_K.EM));
 
             // --- DECLINING INDUSTRY SECTOR ---
 
             // (119) Declining industry enterprise multiplier
-            S_K.DIEM = Table.Lookup(DIEMT_X, DIEMT_Y, Math.Log(S_K.EM, 2.0));
+            S_K.DIEM = TABLE(DIEMT_X, DIEMT_Y, 1.44*Math.Log(S_K.EM));
             // (120) Declining industry land multiplier
-            S_K.DILM = Table.LookupClamp(DILMT_X, DILMT_Y, S_K.LFO);
+            S_K.DILM = TABHL(DILMT_X, DILMT_Y, S_K.LFO);
             // (118) Declining industry demolition multiplier
             S_K.DIDM = S_K.DIEM * S_K.DILM * DIDF;
             // (146) Declining industry demolition program
@@ -784,7 +785,7 @@ namespace UrbanDynamics
             // --- TAX SECTOR ---
 
             // (127) Tax collection multiplier
-            S_K.TCM = Table.LookupClamp(TCMT_X, TCMT_Y, S_K.LUR);
+            S_K.TCM = TABHL(TCMT_X, TCMT_Y, S_K.LUR);
             // (126) Taxes needed
             S_K.TN = (
                 TMP * MPFS * S_K.MP +
@@ -853,6 +854,7 @@ namespace UrbanDynamics
             return S_K;
         }
 
+        #region Helper Functions
         /// <summary>
         /// Returns 'a' if 't' is less than 'sw'. Otherwise returns 'b'.
         /// </summary>
@@ -865,5 +867,135 @@ namespace UrbanDynamics
         {
             return (t < sw ? a : b);
         }
+
+        /// <summary>
+        /// Table lookup function with extrapolation
+        /// </summary>
+        /// <param name="x">X values in monotonically increasing order</param>
+        /// <param name="y">Y values for the given x values</param>
+        /// <param name="q">The x value to query at</param>
+        /// <returns></returns>
+        public static double TABLE(double[] x, double[] y, double q)
+        {
+            // X and Y value arrays must be of equal length
+            if (x.Length != y.Length)
+            {
+                return 0;
+            }
+            // Need at least two values in the lookup table
+            if (x.Length < 1 || y.Length < 1)
+            {
+                return 0;
+            }
+
+            int n = x.Length - 1;
+
+            // Verify values in x are monotonically increasing
+            for (int i = 1; i <= n; i++)
+            {
+                // If a value is less than the previous value, fail early
+                if (x[i] < x[i - 1])
+                {
+                    return 0;
+                }
+            }
+
+            // Y value at query point q
+            double yq = 0;
+
+            if (q < x[0])
+            {
+                // Get slope between x[0] and x[1] and extrapolate
+                double m = (y[1] - y[0]) / (x[1] - x[0]);
+                yq = y[0] + m * (q - x[0]);
+            }
+            else if (q > x[n])
+            {
+                // Get slope between x[n-1] and x[n] and extrapolate
+                double m = (y[n] - y[n - 1]) / (x[n] - x[n - 1]);
+                yq = y[n] + m * (q - x[n]);
+            }
+            else
+            {
+                // Find the two x values that q lies between and interpolate
+                for (int i = 1; i <= n; i++)
+                {
+                    if (q < x[i])
+                    {
+                        // Get slope between x[i] and x[i+1]
+                        double m = (y[i] - y[i - 1]) / (x[i] - x[i - 1]);
+                        // Interpolate at q
+                        yq = y[i - 1] + m * (q - x[i - 1]);
+                        break;
+                    }
+                }
+            }
+
+            return yq;
+        }
+
+        /// <summary>
+        /// Table lookup function with clamping. If q lies outside of x[0] and x[n],
+        /// yq is clamped to y[0] and y[n], respectively.
+        /// </summary>
+        /// <param name="x">X values in monotonically increasing order</param>
+        /// <param name="y">Y values for the given x values</param>
+        /// <param name="q">The x value to query at</param>
+        /// <returns></returns>
+        public static double TABHL(double[] x, double[] y, double q)
+        {
+            // X and Y value arrays must be of equal length
+            if (x.Length != y.Length)
+            {
+                return 0;
+            }
+            // Need at least two values in the lookup table
+            if (x.Length < 1 || y.Length < 1)
+            {
+                return 0;
+            }
+
+            int n = x.Length - 1;
+
+            // Verify values in x are monotonically increasing
+            for (int i = 1; i <= n; i++)
+            {
+                // If a value is less than the previous value, fail early
+                if (x[i] < x[i - 1])
+                {
+                    return 0;
+                }
+            }
+
+            // Y value at query point q
+            double yq = 0;
+
+            if (q < x[0])
+            {
+                yq = y[0];
+            }
+            else if (q > x[n])
+            {
+                yq = y[n];
+            }
+            else
+            {
+                // Find the two x values that q lies between and interpolate
+                for (int i = 1; i <= n; i++)
+                {
+                    if (q < x[i])
+                    {
+                        // Get slope between x[i] and x[i+1]
+                        double m = (y[i] - y[i - 1]) / (x[i] - x[i - 1]);
+                        // Interpolate at q
+                        yq = y[i - 1] + m * (q - x[i - 1]);
+                        break;
+                    }
+                }
+            }
+
+            return yq;
+        }
+        #endregion
     }
 }
