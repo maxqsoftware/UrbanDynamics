@@ -25,7 +25,7 @@ namespace UrbanDynamics
             double AV0 = (HAV0 + BAV0);
 
             double LUR0 = UrbanDynamics.L / UrbanDynamics.U;
-            double TCM0 = Table.LookupClamp(UrbanDynamics.TCMT_X, UrbanDynamics.TCMT_Y, LUR0);
+            double TCM0 = UrbanDynamics.TABHL(UrbanDynamics.TCMT_X, UrbanDynamics.TCMT_Y, LUR0);
             double TN0 = (
                 UrbanDynamics.TMP * UrbanDynamics.MPFS * UrbanDynamics.MP +
                 UrbanDynamics.TLP * UrbanDynamics.LFS * UrbanDynamics.L +
@@ -33,8 +33,8 @@ namespace UrbanDynamics
             double TAI0 = TN0 / AV0;
             double TRN0 = TAI0 / UrbanDynamics.TAN;
 
-            State S_K;
-            State S_J = new State
+            SimState S_K;
+            SimState S_J = new SimState
             {
                 AMMP = UrbanDynamics.AMMP,
                 DI = UrbanDynamics.DI,
@@ -62,13 +62,13 @@ namespace UrbanDynamics
             };
 
             S_J = sim.Update(0, 0, S_J);
-            Console.WriteLine($"{S_J.P}");
+            Console.WriteLine($"0,{S_J.U},{S_J.L},{S_J.MP},{S_J.UH},{S_J.WH},{S_J.PH},{S_J.NE},{S_J.MB},{S_J.DI}");
             for (int k = 1; k <= N; k++)
             {
                 double TIME_K = DT * k;
                 S_K = sim.Update(DT, TIME_K, S_J);
                 S_J = S_K;
-                Console.WriteLine($"{S_K.P}");
+                Console.WriteLine($"{k},{S_J.U},{S_J.L},{S_J.MP},{S_J.UH},{S_J.WH},{S_J.PH},{S_J.NE},{S_J.MB},{S_J.DI}");
             }
 
             Console.ReadKey();

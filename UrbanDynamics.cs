@@ -4,293 +4,234 @@ using System.Linq;
 
 namespace UrbanDynamics
 {
-    public struct State
-    {
-        public double EMM;
-        public double ELM;
-        public double ELJM;
-        public double ETM;
-        public double EGM;
-        public double EM;
-
-        public double NECP;
-        public double NECD;
-
-        public double LAJM;
-        public double LAUM;
-        public double LATM;
-        public double LAHM;
-        public double LCHCD;
-        public double LCR;
-        public double LDC;
-        public double LDI;
-        public double LJ;
-
-        public double HAV;
-        public double BAV;
-        public double AV;
-        public double TC;
-
-        public double L;
-        public double U;
-        public double P;
-
-        public double LA;
-        public double LAM;
-        public double LAMP;
-        public double LB;
-        public double LD;
-        public double LLF;
-        public double LHR;
-        public double LUR;
-        public double LTM;
-        public double LMM;
-        public double LMMP;
-        public double LTPG;
-        public double LSM;
-        public double LUM;
-
-        public double AMM;
-        public double AMMP;
-        public double LCHP;
-        public double UA;
-        public double UAMM;
-        public double UB;
-        public double LTU;
-        public double UD;
-        public double UDM;
-        public double UEM;
-        public double UFW;
-        public double UH;
-        public double UHM;
-        public double UHPM;
-        public double UHPR;
-        public double ULJR;
-        public double UJM;
-        public double UJP;
-        public double UJ;
-        public double UM;
-        public double UR;
-        public double UMM;
-        public double UMMP;
-        public double UTL;
-        public double UTLP;
-        public double UHR;
-        public double UTP;
-        public double UW;
-
-        public double MA;
-        public double MD;
-        public double MP;
-        public double MPB;
-        public double MAJM;
-        public double MAPM;
-        public double MATM;
-        public double MAHM;
-        public double MAM;
-        public double MAMP;
-        public double MDM;
-        public double MLR;
-        public double MLM;
-        public double LEM;
-        public double MSM;
-        public double LDM;
-
-        public double PEM;
-        public double PH;
-        public double PHA;
-        public double PHC;
-        public double PHGR;
-        public double PHO;
-        public double PHAM;
-        public double PHLM;
-        public double PHPM;
-        public double PHTM;
-        public double PHEM;
-        public double PHGM;
-        public double PHM;
-        public double PHCP;
-        public double PHCD;
-        public double PHOM;
-
-        public double WH;
-        public double WHA;
-        public double WHC;
-        public double WHCD;
-        public double WHCP;
-        public double WHO;
-        public double WHGR;
-        public double WHAM;
-        public double WHLM;
-        public double WHUM;
-        public double WHTM;
-        public double WHEM;
-        public double WHGM;
-        public double WHM;
-        public double WHOM;
-
-        public double SHD;
-        public double SHAM;
-        public double SHLM;
-        public double SHDM;
-        public double SHDP;
-
-        public double NE;
-        public double NEA;
-        public double NEC;
-        public double NED;
-        public double NEGR;
-        public double EDM;
-        public double BDM;
-
-        public double DIEM;
-        public double DILM;
-        public double DIDM;
-        public double DIDP;
-
-        public double TCM;
-        public double TN;
-        public double TAI;
-        public double TPCSP;
-        public double TPCR;
-
-        public double MB;
-        public double MBD;
-        public double MHR;
-        public double MPR;
-        public double MJ;
-        public double MR;
-
-        public double DI;
-        public double DID;
-
-        public double TR;
-        public double TRN;
-        public double TRNP;
-
-        public double LR;
-        public double LRP;
-
-        public double HUT;
-        public double PUT;
-        public double LFO;
-    }
-
     public class UrbanDynamics
     {
         #region Constants
+        // Attractiveness for migration factor
         public static double AMF = 1;
+        // Attractiveness for migration mutliplier perceived
         public static double AMMP = 1;
+        // Attractiveness for migration mutliplier perception time (years)
         public static double AMMPT = 20;
+        // Land area (acres)
         public static double AREA = 100000;
+        // Declining industry (productive units)
         public static double DI = 100;
+        // Declining industry assessed value (thousand dollars / productive unit)
         public static double DIAV = 100;
+        // Declining industry construction factor
         public static double DICF = 0.3;
+        // Declining industry demolition factor
         public static double DIDF = 1;
+        // Declining industry demolition normal (fraction / year)
         public static double DIDN = 0.03;
+        // Declining industry demolition rate (fraction / year)
         public static double DIDR = 0;
+        // Declining industry labor (men / productive unit)
         public static double DIL = 10;
+        // Declining industry management (men / productive unit)
         public static double DIM = 1;
+        // Enterprise factor
         public static double EF = 1;
+        // Initial labor population (men)
         public static double L = 14000;
+        // Labor arrival factor
         public static double LAF = 1;
+        // Labor arrival multiplier perceived
         public static double LAMP = 1;
+        // Labor arrival multiplier perception time (years)
         public static double LAMPT = 15;
+        // Labor arrivals normal (fraction / year)
         public static double LAN = 0.03;
+        // Labor birth rate (fraction / year)
         public static double LBR = 0.01;
+        // Low cost housing construction labor (man-years / housing unit)
         public static double LCHCL = 0.6;
+        // Low cost housing program coefficient (housing units / man / years)
         public static double LCHPC = 0;
+        // Labor departures normal (fraction / year)
         public static double LDN = 0.02;
+        // Labor family size
         public static double LFS = 6;
-        public static double LMF = 1;
+        // Labor mobility factor
+        public static double LMF = 0;
+        // Labor mobility multiplier perceived
         public static double LMMP = 1;
+        // Labor mobility multiplier perception time (years)
         public static double LMMPT = 15;
+        // Labor mobility normal (fraction / year)
         public static double LMN = 0.02;
+        // Land per house (acres / housing unit)
         public static double LPH = .1;
+        // Land per production unit (acres / production unit)
         public static double LPP = .2;
+        // Labor/job ratio perceived
         public static double LRP = 1;
+        // Labor/job ratio perception time
         public static double LRPT = 5;
+        // Labor training rate (fraction / year)
         public static double LTR = 0;
+        // Manager arrival factor
         public static double MAF = 1;
+        // Manager arrival multiplier perceived
         public static double MAMP = 1;
+        // Manager arrival multiplier perception time (years)
         public static double MAMPT = 10;
+        // Manager arrivals normal (fraction / year)
         public static double MAN = 0.03;
+        // Mature business (productive units)
         public static double MB = 1000;
+        // Mature business assessed value (thousand dollars / productive unit)
         public static double MBAV = 300;
+        // Mature business construction factor (dimensionless)
         public static double MBCF = 0.5;
+        // Mature business decline normal (fraction / year)
         public static double MBDN = 0.05;
+        // Mature business labor (men / productive unit)
         public static double MBL = 15;
+        // Mature business management (men / productive unit)
         public static double MBM = 2;
+        // Manager departures normal (fraction / year)
         public static double MDN = 0.02;
+        // Managerial-professional population (men)
         public static double MP = 3900;
+        // Managerial-professional birth rate (fraction / year)
         public static double MPBR = 0.0075;
+        // Managerial-professional family size (people / man)
         public static double MPFS = 5;
+        // New enterprise (productive units)
         public static double NE = 200;
+        // New enterprise averaging time (years)
         public static double NEAT = 10;
+        // New enterprise assessed value (thousand dollars / productive unit)
         public static double NEAV = 500;
+        // New enterprise construction factor
         public static double NECF = 1;
+        // New enterprise construction labor (man-years / productive unit)
         public static double NECL = 20;
+        // New enterprise construction normal (fraction / year)
         public static double NECN = 0.05;
+        // New enterprise construction rate (fraction / year)
         public static double NECR = 0;
+        // New enterprise decline normal (fraction / year)
         public static double NEDN = 0.08;
+        // New enterprise initial growth rate (fraction / year)
         public static double NEGRI = 0.03;
+        // New enterprise labor (men / productive unit)
         public static double NEL = 20;
+        // New enterprise management (men / productive unit)
         public static double NEM = 4;
+        // Initial premium housing (housing units)
         public static double PH = 5000;
+        // Premium housing averaging time (years)
         public static double PHAT = 10;
+        // Premium housing assessed value (thousand dollars / housing unit)
         public static double PHAV = 30;
+        // Premium housing construction labor (man-years / housing unit)
         public static double PHCL = 2;
+        // Premium housing construction normal (fraction / year)
         public static double PHCN = 0.03;
+        // Premium housing construction rate (fraction / year)
         public static double PHCR = 0;
+        // Premium housing factor
         public static double PHF = 1;
+        // Premium housing initial growth rate (fraction / year)
         public static double PHGRI = 0.03;
+        // Premium housing obsolescence normal
         public static double PHON = 0.03;
+        // Premium housing population density
         public static double PHPD = 3;
+        // Slum housing demolition factor
         public static double SHDF = 1;
+        // Slum housing demolition normal (fraction / year)
         public static double SHDN = 0.02;
+        // Slum housing demolition rate (fraction / year)
         public static double SHDR = 0;
+        // Switch time 1 (years)
         public static double SWT1 = 0;
+        // Switch time 2 (years)
         public static double SWT2 = 0;
+        // Switch time 3 (years)
         public static double SWT3 = 0;
+        // Switch time 4 (years)
         public static double SWT4 = 0;
+        // Switch time 5 (years)
         public static double SWT5 = 0;
+        // Switch time 6 (years)
         public static double SWT6 = 0;
+        // Switch time 7 (years)
         public static double SWT7 = 0;
+        // Switch time 8 (years)
         public static double SWT8 = 0;
+        // Switch time 9 (years)
         public static double SWT9 = 0;
+        // Switch time 10 (years)
         public static double SWT10 = 0;
+        // Tax assessment normal (dollars / year / thousand dollars)
         public static double TAN = 50;
+        // Tax per labor person (dollars / person / year)
         public static double TLP = 200;
+        // Tax per management person (dollars / person / year)
         public static double TMP = 150;
+        // Tax per capita normal (dollars / year / person)
         public static double TPCN = 250;
+        // Tax per capita subsidy (dollars /  person / year)
         public static double TPCS = 0;
+        // Tax ratio needed perception time (years)
         public static double TRNPT = 30;
+        // Tax per underemployed person (dollars / person / year)
         public static double TUP = 300;
+        // Underemployed (men)
         public static double U = 1200;
+        // Underemployed arrivals normal (fraction / year)
         public static double UAN = 0.05;
+        // Underemployed birth rate (fraction / year)
         public static double UBR = 0.015;
+        // Underemployed departure normal (fraction / year)
         public static double UDN = 0.02;
+        // Underemployed family size
         public static double UFS = 8;
+        // Underemployed housing (housing units)
         public static double UH = 1100;
+        // Underemployed housing assessed value (thousand dollars / housing unit)
         public static double UHAV = 5;
+        // Underemployed housing population density (people / housing unit)
         public static double UHPD = 12;
+        // Underemployed jobs program coefficient
         public static double UJPC = 0;
+        // Underemployed mobility factor
         public static double UMF = 1;
+        // Underemployed mobility multiplier perceived
         public static double UMMP = 1;
+        // Underemployed mobility multiplier perception time
         public static double UMMPT = 10;
+        // Underemployed mobility normal (fraction / year)
         public static double UMN = 0.1;
+        // Underemployed to labor perceived (men / year)
         public static double UTLP = 75;
+        // Underemployed to labor perception time (years)
         public static double UTLPT = 10;
+        // Underemployed training rate (fraction / year)
         public static double UTR = 0;
+        // Worker housing (housing units)
         public static double WH = 21000;
+        // Worker housing averaging time (years)
         public static double WHAT = 10;
+        // Worker housing assessed value (thousand dollars / housing unit)
         public static double WHAV = 15;
+        // Worker housing construction labor (man-years / housing unit)
         public static double WHCL = 1;
+        // Worker housing construction normal (fraction / year)
         public static double WHCN = 0.03;
+        // Worker housing construction rate (fraction / year)
         public static double WHCR = 0;
+        // Worker housing factor
         public static double WHF = 1;
+        // Worker housing initial growth rate (fraction / year)
         public static double WHGRI = 0.03;
+        // Worker housing obsolescence normal (fraction / year)
         public static double WHON = 0.02;
+        // Worker housing population density (people / housing unit)
         public static double WHPD = 6;
         #endregion
 
@@ -456,9 +397,9 @@ namespace UrbanDynamics
         public static double[] LCRT_Y = { 0, 0.5, 0.9, 1.1, 1.15 };
         #endregion
 
-        public State Update(double DT, double TIME, State S_J)
+        public SimState Update(double DT, double TIME, SimState S_J)
         {
-            State S_K = new State();
+            SimState S_K = new SimState();
 
             #region Level Equations
 
